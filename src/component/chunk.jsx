@@ -119,11 +119,29 @@ function Chunk() {
             );
     }
 
+    function getUSXByVerses(bookUsx) {
+        const splitBook = bookUsx.split("<verse number");
+
+        if (splitBook.length < 1) return [];
+        if (splitBook.length < 2) return [`<verse number${splitBook[0]}`];
+
+        // merge pre-verse content with the first verse
+        const firstElement = splitBook.shift();
+        splitBook[0] = `${firstElement}<verse number${splitBook[0]}`;
+
+        for (let i = 1; i < splitBook.length; i++) {
+            splitBook[i] = `<verse number${splitBook[i]}`;
+        }
+        return splitBook;
+    }
+
     function preparePost() {
         const result = {};
         let chunkStart = 1;
+        const book_usx = document.getElementById("chunkingComponent").getAttribute("data-usx");
+        const verses_usx = getUSXByVerses(book_usx);
         chunkedVerses.forEach((item) => {
-            result[chunkStart] = formatVerse(chunkStart, item);
+            result[chunkStart] = verses_usx.slice(chunkStart - 1, chunkStart + item.length).join("");
             chunkStart += item.length;
         });
         return result;
@@ -143,7 +161,7 @@ function Chunk() {
             .then(response => console.log(JSON.stringify(response)))
             .catch((error) => {
                 console.error(error);
-              });
+            });
     }
 
     return (
