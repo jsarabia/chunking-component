@@ -140,7 +140,10 @@ function Chunk() {
             body: JSON.stringify(postData)
         })
             .then(response => response.json())
-            .then(response => console.log(JSON.stringify(response)))
+            .then(response => {
+                alert(response.message);
+                console.log(JSON.stringify(response))
+            })
             .catch((error) => {
                 console.error(error);
             });
