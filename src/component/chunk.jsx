@@ -140,10 +140,13 @@ function Chunk() {
             body: JSON.stringify(postData)
         })
             .then(response => response.json())
-            .then(response => console.log(JSON.stringify(response)))
+            .then(response => {
+                alert(response.message);
+                console.log(JSON.stringify(response))
+            })
             .catch((error) => {
                 console.error(error);
-              });
+            });
     }
 
     return (
@@ -160,6 +163,12 @@ function Chunk() {
                     })
                 }
             </>
+            <div className="sticky-actions" style={{position: 'sticky', top: '0', margin: '1em auto', display: 'flex', justifyContent: 'center', gap: '0.5em'}}>
+                <button disabled={chunkedVerses.length < 1} onClick={() => { undo(); }}>Undo</button>
+                <button disabled={unchunkedVerses.length < 1} onClick={() => { chunkSelected() }}>Chunk</button>
+                <button disabled={redoChunk.length < 1} onClick={() => { redo(); }}>Redo</button>
+                <button style={{margin: 'auto 2em'}} disabled={unchunkedVerses.length > 0} onClick={() => { submit(); }}>Submit</button>
+            </div>
             <>
                 {unchunkedVerses.map((item, index) => {
                     return <div key={index}>
@@ -178,12 +187,6 @@ function Chunk() {
                 })
                 }
             </>
-            <>
-                <button disabled={chunkedVerses.length < 1} onClick={() => { undo(); }}>Undo</button>
-                <button disabled={unchunkedVerses.length < 1} onClick={() => { chunkSelected() }}>Chunk</button>
-                <button disabled={redoChunk.length < 1} onClick={() => { redo(); }}>Redo</button>
-            </>
-            <button disabled={unchunkedVerses.length > 0} onClick={() => { submit(); }}>Submit</button>
         </>
     );
 };
